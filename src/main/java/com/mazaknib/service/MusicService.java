@@ -7,8 +7,11 @@ import com.mazaknib.mapper.MusicMapper;
 import com.mazaknib.repository.MusicRepository;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import com.mongodb.client.gridfs.model.GridFSFile;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsOperations;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
@@ -46,5 +49,13 @@ public class MusicService{
                 object
         );
         return id.toString();
+    }
+    public Music getMusic(String id) {
+        return musicRepository.findById(id).orElseThrow(() -> new RuntimeException("Music not found"));
+    }
+
+    public java.io.InputStream getFileStream(String fileId) throws IOException {
+        GridFSFile gridFSFile = gridFsTemplate.findOne(new Query(Criteria.where("_id").is(fileId)));
+        return operations.getResource(gridFSFile).getInputStream();
     }
 }
