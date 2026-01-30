@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/music")
@@ -33,5 +34,10 @@ public class MusicController {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_OCTET_STREAM) // Or dynamic type
                 .body(new InputStreamResource(stream));
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<MusicResponseDTO>> all() {
+        return ResponseEntity.ok(musicService.all());
     }
 }
